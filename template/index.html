@@ -1,0 +1,24 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>BMI Prediction usecase</title>
+</head>
+
+<body>
+ {{a}}
+    <h2>Check BMI Status</h2>
+    <h3>Please enter the details:</h3>
+    <br>
+        <form method="post" enctype="multipart/form-data" action="predictBMI">
+            {% csrf_token %}
+            <div class="col-md-4 col-sm-4"><label for="lname">Gender:</label> </div> <input type="number" id="lname" name="GenderVal" value={{temp.gender}}><br><br>
+            <div class="col-md-4 col-sm-4"><label for="lname">Height:</label> </div> <input type="number" id="lname" name="HeightVal" value={{temp.height}}><br><br>
+            <div class="col-md-4 col-sm-4"><label for="fname">Weight:</label> </div> <input type="number" id="fname" name="WeightVal" value={{temp.weight}}><br><br>
+            <br>
+            <input type="submit" value="Submit" ></div>
+        </form>
+    <br>
+    <h1>{{scoreval}}</h1>
+</body>
+</html>
