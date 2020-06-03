@@ -35,8 +35,26 @@ def predictBMI(request):
 
         #testData=pd.DataFrame({'x':temp}).transpose()
         testData = pd.DataFrame([temp], columns=temp.keys())
-        print(testData)
-        data_test = sc.fit_transform(testData)
+        testData
+        #print(testData)
+        #data_test = sc.fit_transform(testData)
+        #scoreval=model.predict(data_test)[0]
+        #context={'scoreval':scoreval,'temp':temp}
+        #return render(request,'index.html',context)
+
+        inputdata = np.array(testData).reshape(-1,1)
+        inputdata
+        data_test = sc.fit_transform(inputdata)
+        data_test
+        new= data_test.tolist()
+        new
+        newdata = [new[0]+new[1]+new[2]]
+        newdata
+
+        data_test = sc.fit_transform(newdata)
+        data_test #array([[0., 0., 0.]])
         scoreval=model.predict(data_test)[0]
+        
+
         context={'scoreval':scoreval,'temp':temp}
         return render(request,'index.html',context)
