@@ -14,8 +14,6 @@ import numpy as np
 
 from sklearn.externals import joblib
 
-model = joblib.load('/Users/aimimisman/Desktop/BMIWebApp/models/BMI_model.pkl')
-sc = StandardScaler()
 
 def index(request):
     temp={}
@@ -24,37 +22,28 @@ def index(request):
     temp['Weight'] = 0
     context={'temp':temp}
     return render(request,'index.html',context)
-    #return HttpResponse({'a':1})
     
 def predictBMI(request):
+
+    model = joblib.load('/Users/aimimisman/Desktop/BMIWebApp/models/BMI_model.pkl')
+    fullinputdata = pd.read_csv('/Users/aimimisman/Desktop/BMIWebApp/first/500_Person_Gender_Height_Weight_Index.csv')
+    fullinputdata['Gender'] = fullinputdata['Gender'].map({'Male': 0,'Female': 1})
+    fullinputdata = fullinputdata.drop('Index', axis=1)
+    sc = StandardScaler()
+
     if request.method == 'POST':
         temp={}
         temp['Gender']=int(request.POST.get('GenderVal'))
         temp['Height']=int(request.POST.get('HeightVal'))
         temp['Weight']=int(request.POST.get('WeightVal'))
 
-        #testData=pd.DataFrame({'x':temp}).transpose()
-        testData = pd.DataFrame([temp], columns=temp.keys())
-        testData
-        #print(testData)
-        #data_test = sc.fit_transform(testData)
-        #scoreval=model.predict(data_test)[0]
-        #context={'scoreval':scoreval,'temp':temp}
-        #return render(request,'index.html',context)
-
-        inputdata = np.array(testData).reshape(-1,1)
-        inputdata
-        data_test = sc.fit_transform(inputdata)
-        data_test
-        new= data_test.tolist()
-        new
-        newdata = [new[0]+new[1]+new[2]]
-        newdata
-
+        inputdata = pd.DataFrame([temp], columns=temp.keys())
+        newdata = inputdata.append(fullinputdata)
         data_test = sc.fit_transform(newdata)
-        data_test #array([[0., 0., 0.]])
-        scoreval=model.predict(data_test)[0]
-        
+        prediction = model.predict(data_test)[0]
 
-        context={'scoreval':scoreval,'temp':temp}
+        result = pd.DataFrame([prediction], columns = ['Result'])
+        result = result.replace({0 : 'Extremely Underweight', 2 : 'Underweight', 3 : 'Normal', 4 : 'Overweight', 5 : 'Obese'})
+        
+        context={'result':result}
         return render(request,'index.html',context)
